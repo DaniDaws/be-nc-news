@@ -5,9 +5,7 @@ exports.getTopics = (req, res, next) => {
     .then((topics) => {
       res.status(200).json({ topics });
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
 exports.getEndpoints = (req, res, next) => {
