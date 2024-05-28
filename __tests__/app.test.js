@@ -261,3 +261,67 @@ describe("POST /api/articles/:article_id/comments", () => {
       });
   });
 });
+
+describe("PATCH /api/articles/:article_id", () => {
+  test("200: responds with the updated article with an increased number of votes", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ newVotes: 1 })
+      .expect(200)
+      .then(({ body }) => {
+        const { article } = body;
+        expect(article).toEqual(
+          expect.objectContaining({
+            article_id: 1,
+            votes: 101,
+          })
+        );
+      });
+  });
+
+  test("200: responds with the updated article with a decreased number of votes", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ newVotes: -1 })
+      .expect(200)
+      .then(({ body }) => {
+        const { article } = body;
+        expect(article).toEqual(
+          expect.objectContaining({
+            article_id: 1,
+            votes: 99,
+          })
+        );
+      });
+  });
+
+  test("400: responds with 'Bad Request' when newVotes is not a number", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ newVotes: "not-a-number" })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request");
+      });
+  });
+
+  test("404: responds with 'Not Found' for a non-existent article ID", () => {
+    return request(app)
+      .patch("/api/articles/9999")
+      .send({ newVotes: 1 })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
+
+  test("400: responds with 'Bad Request' for an invalid article ID", () => {
+    return request(app)
+      .patch("/api/articles/not-a-number")
+      .send({ newVotes: 1 })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request");
+      });
+  });
+});

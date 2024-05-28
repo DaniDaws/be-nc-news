@@ -69,3 +69,20 @@ exports.insertCommentByArticleId = (article_id, username, body) => {
     return rows[0];
   });
 };
+
+exports.updateArticleVotes = (article_id, newVotes) => {
+  return db
+    .query(
+      `UPDATE articles
+       SET votes = votes + $1
+       WHERE article_id = $2
+       RETURNING *;`,
+      [newVotes, article_id]
+    )
+    .then(({ rows }) => {
+      if (rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "Not Found" });
+      }
+      return rows[0];
+    });
+};

@@ -4,6 +4,7 @@ const {
   selectAllArticles,
   fetchCommentsByArticleId,
   insertCommentByArticleId,
+  updateArticleVotes,
 } = require("../models/models");
 
 exports.getTopics = (req, res, next) => {
@@ -65,12 +66,25 @@ exports.postCommentByArticleId = (req, res, next) => {
       res.status(201).send({ comment });
     })
     .catch((err) => {
-      if (err.code === "23503") {
-        res.status(404).send({ msg: "Not Found" });
-      } else if (err.code === "22P02") {
-        res.status(400).send({ msg: "Bad Request" });
-      } else {
-        next(err);
-      }
+      next(err);
     });
+};
+
+exports.patchArticleVotes = (req, res, next) => {
+  const { article_id } = req.params;
+  const { newVotes } = req.body;
+
+  if (isNaN(article_id)) {
+    return next({ status: 400, msg: "Bad Request" });
+  }
+
+  if (typeof newVotes !== "number") {
+    return next({ status: 400, msg: "Bad Request" });
+  }
+
+  updateArticleVotes(article_id, newVotes)
+    .then((updatedArticle) => {
+      res.status(200).json({ article: updatedArticle });
+    })
+    .catch(next);
 };
