@@ -3,6 +3,7 @@ const request = require("supertest");
 const seed = require("../db/seeds/seed");
 const db = require("../db/connection");
 const data = require("../db/data/test-data");
+const endpoints = require("../endpoints.json");
 
 afterAll(() => {
   return db.end();
@@ -27,12 +28,23 @@ describe("/api/topics", () => {
         });
       });
   });
-  test("GET 404 - responds with 'Bad Request'", () => {
+  test("GET 404 - responds with 'Not Found'", () => {
     return request(app)
       .get("/api/invalid-route")
       .expect(404)
       .then(({ body }) => {
-        expect(body).toEqual({ msg: "Bad Request" });
+        expect(body).toEqual({ msg: "Not Found" });
+      });
+  });
+});
+
+describe("/api", () => {
+  test("GET 200 - responds with an object describing all available endpoints", () => {
+    return request(app)
+      .get("/api")
+      .then((response) => {
+        expect(response.status).toBe(200);
+        expect(response.body).toEqual(endpoints);
       });
   });
 });

@@ -1,11 +1,14 @@
 const express = require("express");
-const { getTopics } = require("./controllers/controllers");
+const { getTopics, getEndpoints } = require("./controllers/controllers");
 const app = express();
+const endpointData = require("./endpoints.json");
 
 app.get("/api/topics", getTopics);
 
+app.get("/api", getEndpoints);
+
 app.use((req, res, next) => {
-  res.status(404).send({ msg: "Bad Request" });
+  res.status(404).send({ msg: "Not Found" });
 });
 
 app.use((err, req, res, next) => {
