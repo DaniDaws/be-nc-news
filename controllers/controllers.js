@@ -2,6 +2,7 @@ const {
   fetchTopics,
   selectArticleById,
   selectAllArticles,
+  fetchCommentsByArticleId,
 } = require("../models/models");
 
 exports.getTopics = (req, res, next) => {
@@ -33,6 +34,19 @@ exports.getAllArticles = (req, res, next) => {
   selectAllArticles()
     .then((articles) => {
       res.status(200).json({ articles });
+    })
+    .catch(next);
+};
+
+exports.getCommentsByArticleId = (req, res, next) => {
+  const { article_id } = req.params;
+  if (isNaN(article_id)) {
+    return next({ status: 400, msg: "Bad Request" });
+  }
+  selectArticleById(article_id)
+    .then(() => fetchCommentsByArticleId(article_id))
+    .then((comments) => {
+      res.status(200).json({ comments });
     })
     .catch(next);
 };

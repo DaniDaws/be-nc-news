@@ -4,8 +4,11 @@ const {
   getEndpoints,
   getArticleById,
   getAllArticles,
+  getCommentsByArticleId,
 } = require("./controllers/controllers");
 const app = express();
+
+app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 
 app.get("/api/articles/:article_id", getArticleById);
 
