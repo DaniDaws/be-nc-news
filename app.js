@@ -5,8 +5,13 @@ const {
   getArticleById,
   getAllArticles,
   getCommentsByArticleId,
+  postCommentByArticleId,
 } = require("./controllers/controllers");
 const app = express();
+
+app.use(express.json());
+
+app.post("/api/articles/:article_id/comments", postCommentByArticleId);
 
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 
@@ -23,9 +28,10 @@ app.use((req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-  if (err.status && err.msg) {
+  if (err.status) {
     res.status(err.status).send({ msg: err.msg });
   } else {
+    console.error(err);
     res.status(500).send({ msg: "Internal Server Error" });
   }
 });

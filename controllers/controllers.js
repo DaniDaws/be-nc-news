@@ -3,6 +3,7 @@ const {
   selectArticleById,
   selectAllArticles,
   fetchCommentsByArticleId,
+  insertCommentByArticleId,
 } = require("../models/models");
 
 exports.getTopics = (req, res, next) => {
@@ -49,4 +50,27 @@ exports.getCommentsByArticleId = (req, res, next) => {
       res.status(200).json({ comments });
     })
     .catch(next);
+};
+
+exports.postCommentByArticleId = (req, res, next) => {
+  const { article_id } = req.params;
+  const { username, body } = req.body;
+
+  if (!username || !body) {
+    return res.status(400).send({ msg: "Bad Request" });
+  }
+
+  insertCommentByArticleId(article_id, username, body)
+    .then((comment) => {
+      res.status(201).send({ comment });
+    })
+    .catch((err) => {
+      if (err.code === "23503") {
+        res.status(404).send({ msg: "Not Found" });
+      } else if (err.code === "22P02") {
+        res.status(400).send({ msg: "Bad Request" });
+      } else {
+        next(err);
+      }
+    });
 };
