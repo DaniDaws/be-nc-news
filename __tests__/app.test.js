@@ -19,6 +19,7 @@ describe("/api/topics", () => {
       .expect(200)
       .then(({ body }) => {
         const { topics } = body;
+        expect(topics.length).toBe(3);
         topics.forEach((topic) => {
           expect(topics).toBeInstanceOf(Array);
           expect(topic).toMatchObject({
@@ -28,6 +29,9 @@ describe("/api/topics", () => {
         });
       });
   });
+});
+
+describe("404 Errors", () => {
   test("GET 404 - responds with 'Not Found'", () => {
     return request(app)
       .get("/api/invalid-route")
