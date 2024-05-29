@@ -92,3 +92,9 @@ exports.deleteCommentByCommentId = (comment_id) => {
     comment_id,
   ]);
 };
+
+exports.fetchUsers = () => {
+  return db
+    .query("SELECT username, name, avatar_url FROM users;")
+    .then((result) => result.rows);
+};
