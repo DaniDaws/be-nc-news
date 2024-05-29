@@ -3,10 +3,13 @@ const {
   getTopics,
   getEndpoints,
   getArticleById,
+  getAllArticles,
 } = require("./controllers/controllers");
 const app = express();
 
 app.get("/api/articles/:article_id", getArticleById);
+
+app.get("/api/articles", getAllArticles);
 
 app.get("/api/topics", getTopics);
 

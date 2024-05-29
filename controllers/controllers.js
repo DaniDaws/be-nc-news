@@ -1,4 +1,8 @@
-const { fetchTopics, selectArticleById } = require("../models/models");
+const {
+  fetchTopics,
+  selectArticleById,
+  selectAllArticles,
+} = require("../models/models");
 
 exports.getTopics = (req, res, next) => {
   fetchTopics()
@@ -21,6 +25,14 @@ exports.getArticleById = (req, res, next) => {
   selectArticleById(article_id)
     .then((article) => {
       res.status(200).json({ article });
+    })
+    .catch(next);
+};
+
+exports.getAllArticles = (req, res, next) => {
+  selectAllArticles()
+    .then((articles) => {
+      res.status(200).json({ articles });
     })
     .catch(next);
 };
