@@ -25,7 +25,7 @@ exports.selectArticleById = (article_id) => {
 
 exports.fetchAllArticles = (topic) => {
   let queryStr = `
-    SELECT articles.*, COUNT(comments.article_id) AS comment_count 
+    SELECT articles.*, COUNT(comments.article_id) ::INT AS comment_count 
     FROM articles 
     LEFT JOIN comments ON comments.article_id = articles.article_id
   `;
@@ -96,4 +96,12 @@ exports.fetchUsers = () => {
   return db
     .query("SELECT username, name, avatar_url FROM users;")
     .then((result) => result.rows);
+};
+
+exports.checkTopicExists = (topic) => {
+  return db
+    .query("SELECT 1 FROM topics WHERE slug = $1;", [topic])
+    .then(({ rows }) => {
+      return rows.length > 0;
+    });
 };

@@ -7,6 +7,7 @@ const {
   updateArticleVotes,
   deleteCommentByCommentId,
   fetchUsers,
+  checkTopicExists,
 } = require("../models/models");
 
 exports.getTopics = (req, res, next) => {
@@ -39,7 +40,12 @@ exports.getAllArticles = (req, res, next) => {
   fetchAllArticles(topic)
     .then((articles) => {
       if (articles.length === 0 && topic) {
-        return res.status(404).send({ msg: "Not Found" });
+        return checkTopicExists(topic).then((exists) => {
+          if (!exists) {
+            return res.status(404).send({ msg: "Not Found" });
+          }
+          return res.status(200).json({ articles: [] });
+        });
       }
       res.status(200).json({ articles });
     })
