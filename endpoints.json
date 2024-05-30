@@ -91,5 +91,20 @@
         "article_img_url": "https://example.com/image.jpg"
       }
     }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "deletes the comment with the given comment_id, if it exists."
+  },
+  "GET /api/users": {
+    "description": "serves an array of all users",
+    "exampleResponse": {
+      "users": [
+        {
+          "username": "user_1",
+          "name": "User One",
+          "avatar_url": "https://example.com/image.jpg"
+        }
+      ]
+    }
   }
 }

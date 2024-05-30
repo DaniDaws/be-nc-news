@@ -6,6 +6,7 @@ const {
   insertCommentByArticleId,
   updateArticleVotes,
   deleteCommentByCommentId,
+  fetchUsers,
 } = require("../models/models");
 
 exports.getTopics = (req, res, next) => {
@@ -75,14 +76,6 @@ exports.patchArticleVotes = (req, res, next) => {
   const { article_id } = req.params;
   const { newVotes } = req.body;
 
-  if (isNaN(article_id)) {
-    return next({ status: 400, msg: "Bad Request" });
-  }
-
-  if (typeof newVotes !== "number") {
-    return next({ status: 400, msg: "Bad Request" });
-  }
-
   updateArticleVotes(article_id, newVotes)
     .then((updatedArticle) => {
       res.status(200).json({ article: updatedArticle });
@@ -98,6 +91,14 @@ exports.deleteComment = (req, res, next) => {
         return res.status(404).send({ msg: "Not Found" });
       }
       res.sendStatus(204);
+    })
+    .catch(next);
+};
+
+exports.getUsers = (req, res, next) => {
+  fetchUsers()
+    .then((users) => {
+      res.status(200).json({ users });
     })
     .catch(next);
 };
