@@ -33,8 +33,7 @@
     "express": "^4.19.2",
     "fs": "^0.0.1-security",
     "jest-sorted": "^1.0.15",
-    "pg": "^8.11.5",
-    "prepare": "husky install"
+    "pg": "^8.11.5"
   },
   "jest": {
     "setupFilesAfterEnv": [
