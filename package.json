@@ -28,9 +28,10 @@
     "supertest": "^7.0.0"
   },
   "dependencies": {
-    "dotenv": "^16.0.0",
+    "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "fs": "^0.0.1-security",
+    "jest-sorted": "^1.0.15",
     "pg": "^8.11.5"
   },
   "jest": {
