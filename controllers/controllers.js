@@ -5,6 +5,7 @@ const {
   fetchCommentsByArticleId,
   insertCommentByArticleId,
   updateArticleVotes,
+  deleteCommentByCommentId,
 } = require("../models/models");
 
 exports.getTopics = (req, res, next) => {
@@ -85,6 +86,18 @@ exports.patchArticleVotes = (req, res, next) => {
   updateArticleVotes(article_id, newVotes)
     .then((updatedArticle) => {
       res.status(200).json({ article: updatedArticle });
+    })
+    .catch(next);
+};
+
+exports.deleteComment = (req, res, next) => {
+  const { comment_id } = req.params;
+  deleteCommentByCommentId(comment_id)
+    .then((result) => {
+      if (result.rowCount === 0) {
+        return res.status(404).send({ msg: "Not Found" });
+      }
+      res.sendStatus(204);
     })
     .catch(next);
 };

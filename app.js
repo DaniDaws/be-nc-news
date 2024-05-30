@@ -7,10 +7,13 @@ const {
   getCommentsByArticleId,
   postCommentByArticleId,
   patchArticleVotes,
+  deleteComment,
 } = require("./controllers/controllers");
 const app = express();
 
 app.use(express.json());
+
+app.delete("/api/comments/:comment_id", deleteComment);
 
 app.patch("/api/articles/:article_id", patchArticleVotes);
 
@@ -35,8 +38,7 @@ app.use((err, req, res, next) => {
     res.status(404).send({ msg: "Not Found" });
   } else if (err.code === "22P02") {
     res.status(400).send({ msg: "Bad Request" });
-  }
-  if (err.status) {
+  } else if (err.status && err.msg) {
     res.status(err.status).send({ msg: err.msg });
   } else {
     console.error(err);
