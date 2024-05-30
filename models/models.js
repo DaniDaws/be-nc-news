@@ -7,9 +7,12 @@ exports.fetchTopics = () => {
 exports.selectArticleById = (article_id) => {
   return db
     .query(
-      `SELECT author, title, article_id, body, topic, created_at, votes, article_img_url
-         FROM articles
-         WHERE article_id = $1`,
+      `SELECT articles.author, articles.title, articles.article_id, articles.body, articles.topic, articles.created_at, articles.votes, articles.article_img_url,
+              COUNT(comments.comment_id) AS comment_count
+       FROM articles
+       LEFT JOIN comments ON comments.article_id = articles.article_id
+       WHERE articles.article_id = $1
+       GROUP BY articles.article_id;`,
       [article_id]
     )
     .then(({ rows }) => {
