@@ -1,7 +1,7 @@
 const {
   fetchTopics,
   selectArticleById,
-  selectAllArticles,
+  fetchAllArticles,
   fetchCommentsByArticleId,
   insertCommentByArticleId,
   updateArticleVotes,
@@ -35,8 +35,12 @@ exports.getArticleById = (req, res, next) => {
 };
 
 exports.getAllArticles = (req, res, next) => {
-  selectAllArticles()
+  const { topic } = req.query;
+  fetchAllArticles(topic)
     .then((articles) => {
+      if (articles.length === 0 && topic) {
+        return res.status(404).send({ msg: "Not Found" });
+      }
       res.status(200).json({ articles });
     })
     .catch(next);

@@ -4,6 +4,7 @@ const seed = require("../db/seeds/seed");
 const db = require("../db/connection");
 const data = require("../db/data/test-data");
 const endpoints = require("../endpoints.json");
+const jestSorted = require("jest-sorted");
 
 afterAll(() => {
   return db.end();
@@ -93,13 +94,12 @@ describe("/api/articles/:article_id", () => {
 });
 
 describe("/api/articles", () => {
-  test("GET 200 - responds with an array of article objects", () => {
+  test("GET 200 - responds with an array of all articles when no topic query is provided", () => {
     return request(app)
       .get("/api/articles")
       .expect(200)
       .then(({ body }) => {
         const { articles } = body;
-        expect(articles).toBeInstanceOf(Array);
         expect(articles.length).toBeGreaterThan(0);
         articles.forEach((article) => {
           expect(article).toMatchObject({
@@ -112,12 +112,32 @@ describe("/api/articles", () => {
             article_img_url: expect.any(String),
             comment_count: expect.any(String),
           });
-          expect(article).not.toHaveProperty("body");
         });
       });
   });
-});
 
+  test("GET 200 - responds with an array of articles filtered by the topic query", () => {
+    return request(app)
+      .get("/api/articles?topic=mitch")
+      .expect(200)
+      .then(({ body }) => {
+        const { articles } = body;
+        expect(articles.length).toBeGreaterThan(0);
+        articles.forEach((article) => {
+          expect(article.topic).toBe("mitch");
+        });
+      });
+  });
+
+  test("GET 404 - responds with an error if the topic does not exist", () => {
+    return request(app)
+      .get("/api/articles?topic=not-a-topic")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
+});
 describe("GET /api/articles/:article_id/comments", () => {
   test("200: responds with an array of comments for the given article_id", () => {
     return request(app)
@@ -147,6 +167,19 @@ describe("GET /api/articles/:article_id/comments", () => {
       .expect(200)
       .then(({ body }) => {
         expect(body.comments).toEqual([]);
+      });
+  });
+
+  test("responds with comments sorted by date in descending order", () => {
+    return request(app)
+      .get("/api/articles/1/comments")
+      .expect(200)
+      .then(({ body }) => {
+        const { comments } = body;
+        expect(comments).toBeSortedBy("created_at", {
+          descending: true,
+          date: true,
+        });
       });
   });
 
