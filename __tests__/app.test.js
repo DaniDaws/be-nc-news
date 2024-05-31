@@ -171,6 +171,44 @@ describe("/api/articles", () => {
       });
   });
 
+  test("GET 200 - responds with articles sorted by title in ascending order", () => {
+    return request(app)
+      .get("/api/articles?sort_by=title&order=asc")
+      .expect(200)
+      .then(({ body }) => {
+        const { articles } = body;
+        expect(articles).toBeSortedBy("title", { ascending: true });
+      });
+  });
+
+  test("GET 200 - responds with articles sorted by votes in descending order", () => {
+    return request(app)
+      .get("/api/articles?sort_by=votes&order=desc")
+      .expect(200)
+      .then(({ body }) => {
+        const { articles } = body;
+        expect(articles).toBeSortedBy("votes", { descending: true });
+      });
+  });
+
+  test("GET 400 - responds with 'Bad Request' for invalid sort_by column", () => {
+    return request(app)
+      .get("/api/articles?sort_by=invalid_column")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request: Invalid sort_by column");
+      });
+  });
+
+  test("GET 400 - responds with 'Bad Request' for invalid order value", () => {
+    return request(app)
+      .get("/api/articles?order=invalid_order")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request: Invalid order value");
+      });
+  });
+
   test("GET 404 - responds with an error if the topic does not exist", () => {
     return request(app)
       .get("/api/articles?topic=not-a-topic")

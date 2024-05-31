@@ -23,7 +23,7 @@ exports.selectArticleById = (article_id) => {
     });
 };
 
-exports.fetchAllArticles = (topic) => {
+exports.fetchAllArticles = (topic, sort_by = "created_at", order = "DESC") => {
   let queryStr = `
     SELECT articles.*, COUNT(comments.article_id) ::INT AS comment_count 
     FROM articles 
@@ -38,7 +38,7 @@ exports.fetchAllArticles = (topic) => {
   }
 
   queryStr += ` GROUP BY articles.article_id 
-                ORDER BY articles.created_at DESC;`;
+                ORDER BY ${sort_by} ${order};`;
 
   return db.query(queryStr, queryParams).then((result) => result.rows);
 };

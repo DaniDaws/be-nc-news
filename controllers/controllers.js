@@ -36,8 +36,28 @@ exports.getArticleById = (req, res, next) => {
 };
 
 exports.getAllArticles = (req, res, next) => {
-  const { topic } = req.query;
-  fetchAllArticles(topic)
+  const { topic, sort_by = "created_at", order = "DESC" } = req.query;
+  const validSortByColumns = [
+    "title",
+    "author",
+    "created_at",
+    "votes",
+    "comment_count",
+  ];
+  const validOrderValues = ["ASC", "DESC"];
+
+  const sortByColumn = sort_by.toLowerCase();
+  const orderValue = order.toUpperCase();
+
+  if (sort_by && !validSortByColumns.includes(sortByColumn)) {
+    return next({ status: 400, msg: "Bad Request: Invalid sort_by column" });
+  }
+
+  if (order && !validOrderValues.includes(orderValue)) {
+    return next({ status: 400, msg: "Bad Request: Invalid order value" });
+  }
+
+  fetchAllArticles(topic, sortByColumn, orderValue)
     .then((articles) => {
       if (articles.length === 0 && topic) {
         return checkTopicExists(topic).then((exists) => {
