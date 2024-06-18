@@ -2,7 +2,7 @@
 
 ---
 
-A hosted version of this project can be found at https://be-nc-news-r6yn.onrender.com, please suffix the url with the path that you wish to access (e.g., /api/topics).
+A hosted version of this project can be found at https://be-nc-news-r6yn.onrender.com/api, suffix the url with the path that you wish to access (e.g. /topics).
 
 ---
 
@@ -42,17 +42,17 @@ This will start the server.
 
 ## API Endpoints
 
-The API provides the following endpoints:
+The API provides the following endpoints:<br><br>
 
-GET /api/topics - Retrieve all topics
-GET /api/articles - Retrieve all articles
-GET /api/articles/:article_id - Retrieve a specific article by ID
-GET /api/articles/:article_id/comments - Retrieve comments for a specific article
-POST /api/articles/:article_id/comments - Post a new comment on a specific article
-PATCH /api/articles/:article_id - Update the votes of a specific article
-DELETE /api/comments/:comment_id - Delete a specific comment
-GET /api/users - Retrieve all users
-GET /api - Retrieve all available endpoints
+- **GET /api/topics** - Retrieve all topics
+- **GET /api/articles** - Retrieve all articles
+- **GET /api/articles/:article_id** - Retrieve a specific article by ID
+- **GET /api/articles/:article_id/comments** - Retrieve comments for a specific article
+- **POST /api/articles/:article_id/comments** - Post a new comment on a specific article
+- **PATCH /api/articles/:article_id** - Update the votes of a specific article
+- **DELETE /api/comments/:comment_id** - Delete a specific comment
+- **GET /api/users** - Retrieve all users
+- **GET /api** - Retrieve all available endpoints
 
 ---
 
